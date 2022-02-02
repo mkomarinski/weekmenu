@@ -1,0 +1,12 @@
+SCOPES = ['https://www.googleapis.com/auth/calendar'
+          , 'https://www.googleapis.com/auth/spreadsheets']
+SPREADSHEET_ID = "SPREADSHEET ID"
+RANGE = 'recipe!A:G'
+CALENDARID_WEEKMENU = "CALENDAR@group.calendar.google.com"
+TRADITIONS = { 'Friday' : 'Pizza',
+	'Sunday' : 'Make your own',
+	'Tuesday' : 'Clean the fridge' }
+NB_DAYS_BEFORE = 3
+BUSY_EVENTS = ['B']
+FREE_EVENTS = ['Holiday']
+ALL_EVENTS = BUSY_EVENTS + FREE_EVENTS
