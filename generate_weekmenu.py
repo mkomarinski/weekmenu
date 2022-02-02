@@ -179,7 +179,7 @@ def add_weekmenu_to_calendar(service, weekmenu_df, calendarId):
             'date': i.date().isoformat(),
         },
         'end': {
-            'date': i.date().isoformat(),
+            'date': i.date().isoformat() + timedelta(days=1),
         }
         }
         event = service.events().insert(calendarId=calendarId, body=event).execute()
