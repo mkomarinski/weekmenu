@@ -256,7 +256,7 @@ def update_sheet(service, row_number, date, spreadsheetId):
     spreadsheetId : str
         ID of the Google Spreadsheet
     """
-    range = "recepten!F"  + str(row_number)
+    range = "recipe!F"  + str(row_number)
     values = [[date]]
     body = {'values' : values}
     result = service.spreadsheets().values().update(spreadsheetId=spreadsheetId
