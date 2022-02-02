@@ -214,7 +214,8 @@ def get_recipes(service, spreadsheetId, range):
     recipes_df = pd.DataFrame.from_records(recipes[1:], columns=recipes[0])
     recipes_df.last_date_on_menu = pd.to_datetime(recipes_df.last_date_on_menu, dayfirst=True)
     recipes_df.set_index('row_number', inplace=True)
-    eligible_recipes = recipes_df[ (recipes_df.last_date_on_menu < PREV_WEEK) | (np.isnat(recipes_df.last_date_on_menu)) ]
+    previous_week = datetime.strptime(PREV_WEEK, '%Y-%m-%dT%H:%M:%SZ')
+    eligible_recipes = recipes_df[ (recipes_df.last_date_on_menu < previous_week) | (np.isnat(recipes_df.last_date_on_menu)) ]
     return recipes_df, eligible_recipes
 
 def choose_recipe(difficulty, idx, weekmenu_df, eligible_recipes):
