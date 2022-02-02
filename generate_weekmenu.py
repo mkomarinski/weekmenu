@@ -177,11 +177,9 @@ def add_weekmenu_to_calendar(service, weekmenu_df, calendarId):
         'description': r.description,
         'start': {
             'date': i.date().isoformat(),
-            'timeZone': 'Europe/Brussels'
         },
         'end': {
             'date': i.date().isoformat(),
-            'timeZone': 'Europe/Brussels'
         }
         }
         event = service.events().insert(calendarId=calendarId, body=event).execute()
