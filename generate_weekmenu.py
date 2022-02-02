@@ -210,7 +210,7 @@ def get_recipes(service, spreadsheetId, range):
     recipes_result = service.spreadsheets().values().get(spreadsheetId=spreadsheetId, range=range).execute()
     recipes = recipes_result.get('values', [])
     recipes_df = pd.DataFrame.from_records(recipes[1:], columns=recipes[0])
-    recipes_df.last_date_on_menu = pd.to_datetime(recipes_df.last_date_on_menu, dayfirst=True)
+    recipes_df.last_date_on_menu = pd.to_datetime(recipes_df.last_date_on_menu, dayfirst=False)
     recipes_df.set_index('row_number', inplace=True)
     previous_week = datetime.strptime(PREV_WEEK, '%Y-%m-%dT%H:%M:%SZ')
     eligible_recipes = recipes_df[ (recipes_df.last_date_on_menu < previous_week) | (np.isnat(recipes_df.last_date_on_menu)) ]
