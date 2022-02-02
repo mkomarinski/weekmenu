@@ -126,14 +126,12 @@ def get_date_last_event(service, calendarId):
     date_last_event = datetime.strptime(date_last_event, '%Y-%m-%d').date()
     return date_last_event
 
-def create_events_df(events_list_1, events_list_2):
+def create_events_df(events_list_1):
     """Returns a Pandas DataFrame containing the events of the two Google Calendars.
 
     Parameters
     ----------
     event_list_1 : list
-        list with Google Calendar events
-    event_list_2 : list
         list with Google Calendar events
 
     Returns
@@ -141,9 +139,7 @@ def create_events_df(events_list_1, events_list_2):
     events_df : Pandas DataFrame
         dataFrame with events of both Google Calendars indexed by the dates for the coming week
     """
-    events_df_1 = pd.DataFrame.from_records(events_list_1, columns=['date', 'events_cal_1'])
-    events_df_2 = pd.DataFrame.from_records(events_list_2, columns=['date', 'events_cal_2'])
-    events_df = events_df_1.merge(events_df_2, on='date', how='outer')
+    events_df = pd.DataFrame.from_records(events_list_1, columns=['date', 'events_cal_1'])
     events_df.date = pd.to_datetime(events_df.date)
     events_df.set_index('date', inplace=True)
     events_df.sort_index(inplace=True)
@@ -294,8 +290,8 @@ def generate_weekmenu(service, events_df, traditions, free_events):
             if r.weekday in ['Saturday', 'Sunday']:
                 row_number = choose_recipe('difficult', i, weekmenu_df, eligible_recipes)
                 update_sheet(service, row_number, i.strftime('%d-%m-%Y'), cfg.SPREADSHEET_ID)
-            elif r.events_cal_1 in free_events or r.events_cal_2 in free_events \
-            or pd.isnull(r.events_cal_1) or pd.isnull(r.events_cal_2):
+            elif r.events_cal_1 in free_events \
+            or pd.isnull(r.events_cal_1):
                 row_number = choose_recipe('medium', i, weekmenu_df, eligible_recipes)
                 update_sheet(service, row_number, i.strftime('%d-%m-%Y'), cfg.SPREADSHEET_ID)
             else:
@@ -328,11 +324,11 @@ if __name__ == '__main__':
     # Check if the last weekmenu is still active
     if DATE_LAST_RECIPE - timedelta(days=cfg.NB_DAYS_BEFORE) < datetime.now().date():
         # Getting the events from the Google Calendars
-        events_list_1 = get_events_by_calendarId(service_cal, cfg.CALENDARID_1, START_DAY, NEXT_WEEK, cfg.ALL_EVENTS)
-        events_list_2 = get_events_by_calendarId(service_cal, cfg.CALENDARID_2, START_DAY, NEXT_WEEK, cfg.ALL_EVENTS)
+        events_list_1 = get_events_by_calendarId(service_cal, cfg.CALENDARID_WEEKMENU, START_DAY, NEXT_WEEK, cfg.ALL_EVENTS)
+        #events_list_2 = get_events_by_calendarId(service_cal, cfg.CALENDARID_2, START_DAY, NEXT_WEEK, cfg.ALL_EVENTS)
 
         # Merge the two events lists
-        events_df = create_events_df(events_list_1, events_list_2)
+        events_df = create_events_df(events_list_1)
 
         # Generating the weekmenu
         weekmenu_df = generate_weekmenu(service_sheet, events_df, cfg.TRADITIONS, cfg.FREE_EVENTS)
