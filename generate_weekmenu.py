@@ -1,4 +1,4 @@
-#!/usr/bin/python3.6
+#!/usr/bin/python3
 import config as cfg
 import pandas as pd
 import numpy as np
@@ -168,14 +168,15 @@ def add_weekmenu_to_calendar(service, weekmenu_df, calendarId):
         ID of the owner of the Google Calendar
     """
     for i, r in weekmenu_df.iterrows():
+        end_date=i.date() + timedelta(days=1)
         event = {
         'summary': r.recipe,
         'description': r.description,
         'start': {
-            'date': i.date().isoformat(),
+            'date': i.date().strftime("%Y-%m-%d"),
         },
         'end': {
-            'date': i.date().isoformat() + timedelta(days=1),
+            'date': end_date.strftime("%Y-%m-%d"),
         }
         }
         event = service.events().insert(calendarId=calendarId, body=event).execute()
